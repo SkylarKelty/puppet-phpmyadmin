@@ -42,7 +42,7 @@ $cfg['Servers'][$i]['AllowNoPassword'] = true;
 /* User used to manipulate with storage */
 $cfg['Servers'][$i]['controlhost'] = '127.0.0.1';
 $cfg['Servers'][$i]['controluser'] = 'pma';
-$cfg['Servers'][$i]['controlpass'] = '';
+$cfg['Servers'][$i]['controlpass'] = 'password';
 
 /* Storage database and tables */
 $cfg['Servers'][$i]['pmadb'] = 'phpmyadmin';
