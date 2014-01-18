@@ -33,8 +33,7 @@ class phpmyadmin(
 
    mysql_user {
       'pma@127.0.0.1':
-         ensure   => 'present',
-         password => '';
+         ensure   => 'present';
    }
 
    mysql_grant {
