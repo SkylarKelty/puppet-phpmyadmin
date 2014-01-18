@@ -9,9 +9,9 @@ class phpmyadmin(
          cwd     => '/tmp';
       'install-phpmyadmin-db':
          path    => '/bin/:/usr/bin',
-         command => "cat $install_location/examples/create_tables.sql | mysql -u root",
+         command => "cat $install_location/examples/create_tables.sql | mysql -u pma",
          unless  => 'test `mysql phpmyadmin -NBe \'SHOW TABLES\' | wc -l` -gt 0',
-         require => [ Exec['install-phpmyadmin'], Mysql_database['phpmyadmin'] ];
+         require => [ Exec['install-phpmyadmin'], Mysql_database['phpmyadmin'], Mysql_user['pma@127.0.0.1'] ];
    }
 
    file {
@@ -28,15 +28,13 @@ class phpmyadmin(
       'phpmyadmin':
          ensure   => 'present',
          charset  => 'utf8',
-         collate  => 'utf8_bin',
-         require  => [Package['mysql_client', 'mysql-server'], Service['mysqld']];
+         collate  => 'utf8_bin';
    }
 
    mysql_user {
       'pma@127.0.0.1':
          ensure   => 'present',
-         password => '',
-         require  => [Package['mysql_client', 'mysql-server'], Service['mysqld']];
+         password => '';
    }
 
    mysql_grant {
@@ -45,7 +43,6 @@ class phpmyadmin(
          options    => ['GRANT'],
          privileges => ['ALL'],
          table      => 'phpmyadmin.*',
-         user       => 'pma@127.0.0.1',
-         require    => [Package['mysql_client', 'mysql-server'], Service['mysqld']];
+         user       => 'pma@127.0.0.1';
    }
 }
