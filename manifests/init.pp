@@ -1,13 +1,15 @@
-class phpmyadmin {
+class phpmyadmin(
+      $install_location = '/var/www/html/phpMyAdmin'
+   ) {
    exec {
       'install-phpmyadmin':
          path    => '/bin/:/usr/bin',
-         command => 'curl -SsL https://github.com/phpmyadmin/phpmyadmin/archive/STABLE.tar.gz | tar xzfv - && mv -i phpmyadmin-STABLE /var/www/html/phpMyAdmin',
-         creates => '/var/www/html/phpMyAdmin',
+         command => "curl -SsL https://github.com/phpmyadmin/phpmyadmin/archive/STABLE.tar.gz | tar xzfv - && mv -i phpmyadmin-STABLE $install_location",
+         creates => $install_location,
          cwd     => '/tmp';
       'install-phpmyadmin-db':
          path    => '/bin/:/usr/bin',
-         command => 'cat /var/www/html/phpMyAdmin/examples/create_tables.sql | mysql -u root',
+         command => "cat $install_location/examples/create_tables.sql | mysql -u root",
          unless  => 'test `mysql phpmyadmin -NBe \'SHOW TABLES\' | wc -l` -gt 0',
          require => [ Exec['install-phpmyadmin'], Mysql_database['phpmyadmin'] ];
    }
